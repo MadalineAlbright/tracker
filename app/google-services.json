@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "958586937703",
+    "project_id": "tracker-61bcd",
+    "storage_bucket": "tracker-61bcd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958586937703:android:add87761d49ac832024fc2",
+        "android_client_info": {
+          "package_name": "com.challengers.trackmyorder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "958586937703-in022b97ni8itbb4b7v9kjtgjg6vqa2e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvZqpwkpiug6JiJBih6qTA3KdroqzOh5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "958586937703-in022b97ni8itbb4b7v9kjtgjg6vqa2e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

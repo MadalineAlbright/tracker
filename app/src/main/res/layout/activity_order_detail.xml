@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.challengers.trackmyorder.OrderDetailActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Order Id"
+                android:textColor="@color/colorAccent"
+                style="@style/TextAppearance.AppCompat.Large"/>
+
+            <TextView
+                android:id="@+id/order_detail_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="order1001"
+                style="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="Item in the Order"
+                android:textColor="@color/colorAccent"
+                style="@style/TextAppearance.AppCompat.Large"/>
+
+            <TextView
+                android:id="@+id/order_detail_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="Item"
+                style="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="Current Status"
+                android:textColor="@color/colorAccent"
+                style="@style/TextAppearance.AppCompat.Large"/>
+
+            <TextView
+                android:id="@+id/order_detail_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="Picked Up"
+                style="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="Delivered By"
+                android:textColor="@color/colorAccent"
+                style="@style/TextAppearance.AppCompat.Large"/>
+
+            <TextView
+                android:id="@+id/order_delBoy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                style="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="Ordered By"
+                android:textColor="@color/colorAccent"
+                style="@style/TextAppearance.AppCompat.Large"/>
+
+            <TextView
+                android:id="@+id/order_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                style="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:id="@+id/order_details_location_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="Location"
+                android:visibility="gone"
+                android:textColor="@color/colorAccent"
+                style="@style/TextAppearance.AppCompat.Large"/>
+
+            <ImageView
+                android:id="@+id/user_location_static_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center"
+                android:contentDescription="Location"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
