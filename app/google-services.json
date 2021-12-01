@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "958586937703",
-    "project_id": "tracker-61bcd",
-    "storage_bucket": "tracker-61bcd.appspot.com"
+    "project_number": "973415620537",
+    "project_id": "tracker-5ef37",
+    "storage_bucket": "tracker-5ef37.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:958586937703:android:add87761d49ac832024fc2",
+        "mobilesdk_app_id": "1:973415620537:android:ce0710df256949e0cee068",
         "android_client_info": {
           "package_name": "com.challengers.trackmyorder"
         }
       },
       "oauth_client": [
         {
-          "client_id": "958586937703-in022b97ni8itbb4b7v9kjtgjg6vqa2e.apps.googleusercontent.com",
+          "client_id": "973415620537-hlm8ebm8v9e6a6cq06tpiprqf55ebs0t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCvZqpwkpiug6JiJBih6qTA3KdroqzOh5I"
+          "current_key": "AIzaSyARYNgeKHStnbTwwVYHexBqsSOmsgv8QNs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "958586937703-in022b97ni8itbb4b7v9kjtgjg6vqa2e.apps.googleusercontent.com",
+              "client_id": "973415620537-hlm8ebm8v9e6a6cq06tpiprqf55ebs0t.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
