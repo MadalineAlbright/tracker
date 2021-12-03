@@ -10,9 +10,7 @@ import android.os.Bundle;
 
 import com.challengers.trackmyorder.util.Constants;
 
-/**
- * Created by rajesh on 5/14/2016.
- */
+
 public class PickOrderDialog extends DialogFragment{
 
     private String[] orders;

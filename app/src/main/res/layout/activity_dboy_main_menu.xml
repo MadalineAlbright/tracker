@@ -12,7 +12,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:text="My Orders"
+        android:text="My Parcels"
         android:id="@+id/dboy_my_order"
         android:background="@color/colorAccent"
         android:textColor="#fefefe"

@@ -2,10 +2,7 @@ package com.challengers.trackmyorder.util;
 
 import com.firebase.client.Firebase;
 
-/**
- * Copyright (c) 2016 Kalyan Dechiraju
- * Created by kalyandechiraju on 14/05/16.
- */
+
 public class Constants {
     public static final String FIRST_RUN_KEY = "first_run";
     public static final String CURRENT_DELBOY = "current_delboy";

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item name="email" type="id">r</item>
-    <item name="password" type="id">p</item>
-    <item name="loginbtn" type="id">b</item>
-    <item name="createText" type="id">t</item>
-</resources>

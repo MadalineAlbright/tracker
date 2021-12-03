@@ -1,6 +1,9 @@
-apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
-apply plugin: 'com.google.gms.google-services'
+plugins {
+    id  'com.android.application'
+    id  'realm-android'
+    id 'com.google.gms.google-services'
+
+}
 
 
 android {
@@ -39,6 +42,7 @@ dependencies {
     implementation 'com.firebase:firebase-client-android:2.3.1'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.google.firebase:firebase-firestore:24.0.0'
 
 //    implementation 'com.google.android.gms:play-services:12.0.1'
 
@@ -69,4 +73,3 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 }
 //apply plugin: 'realm-android'
-apply plugin: 'com.google.gms.google-services'

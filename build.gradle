@@ -2,15 +2,15 @@
 buildscript {
     repositories {
         google()
-        jcenter()
+
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:4.2.2"
+        classpath 'com.android.tools.build:gradle:7.0.2'
        // classpath "io.realm:realm-gradle-plugin:0.90.1"
         classpath "com.google.gms:google-services:4.3.10"
 
-        classpath "io.realm:realm-gradle-plugin:10.0.1"
+       classpath "io.realm:realm-gradle-plugin:10.8.1"
 
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -22,7 +22,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
+         // Warning: this repository is going to shut down soon
     }
 }
 

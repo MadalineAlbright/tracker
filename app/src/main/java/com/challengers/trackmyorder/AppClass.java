@@ -20,10 +20,7 @@ import io.realm.RealmConfiguration;
 //import io.realm.Realm;
 //import io.realm.RealmConfiguration;
 
-/**
- * Copyright (c) 2016 Kalyan Dechiraju
- * Created by kalyandechiraju on 14/05/16.
- */
+
 public class AppClass extends Application {
     @Override
     public void onCreate() {
@@ -66,27 +63,27 @@ public class AppClass extends Application {
         Realm realm = Realm.getDefaultInstance();
 
         DelBoy delBoy = new DelBoy();
-        delBoy.setId("delboy1");
-        delBoy.setName("Kalyan");
+        delBoy.setId("email");
+        delBoy.setName("Users");
 
         Order order = new Order();
-        order.setOrderId("order1001");
-        order.setItem("Groceries");
+        order.setOrderId("parcel 1001");
+        order.setItem("Above 30kg");
         order.setStatus(Constants.STATUS_UNKNOWN);
 
         Order order1 = new Order();
-        order1.setOrderId("order1002");
-        order1.setItem("Food");
+        order1.setOrderId("parcel 1002");
+        order1.setItem("Below 30kg");
         order1.setStatus(Constants.STATUS_UNKNOWN);
 
         Order order2 = new Order();
-        order2.setOrderId("order1003");
-        order2.setItem("Food");
+        order2.setOrderId("parcel 1003");
+        order2.setItem("letters");
         order2.setStatus(Constants.STATUS_UNKNOWN);
 
         Order order3 = new Order();
-        order3.setOrderId("order1004");
-        order3.setItem("Pharma");
+        order3.setOrderId("parcel 1004");
+        order3.setItem("delicate and fragile");
         order3.setStatus(Constants.STATUS_UNKNOWN);
 
         List<Order> orderList = new ArrayList<>(4);
@@ -106,23 +103,23 @@ public class AppClass extends Application {
         delBoy.setCurrentOrderIds(orderIdList);
 
         User user = new User();
-        user.setUserId("kalyan123");
-        user.setUsername("Kalyan");
+        user.setUserId("email");
+        user.setUsername("email");
         user.setCurrentOrderId(order1.getOrderId());
 
         User user1 = new User();
-        user1.setUserId("user102");
-        user1.setUsername("Chandan");
+        user1.setUserId("email");
+        user1.setUsername("email");
         user1.setCurrentOrderId(order.getOrderId());
 
         User user2 = new User();
-        user2.setUserId("user103");
-        user2.setUsername("Chandan");
+        user2.setUserId("email");
+        user2.setUsername("email");
         user2.setCurrentOrderId(order2.getOrderId());
 
         User user3 = new User();
-        user3.setUserId("user104");
-        user3.setUsername("Chandan");
+        user3.setUserId("email");
+        user3.setUsername("email");
         user3.setCurrentOrderId(order3.getOrderId());
 
         realm.beginTransaction();

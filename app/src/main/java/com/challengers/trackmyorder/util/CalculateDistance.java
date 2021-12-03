@@ -1,9 +1,6 @@
 package com.challengers.trackmyorder.util;
 
-/**
- * Copyright (c) 2016 Kalyan Dechiraju
- * Created by kalyandechiraju on 14/05/16.
- */
+
 public class CalculateDistance {
     /**
      * Calculates distance between two (lat,long) points

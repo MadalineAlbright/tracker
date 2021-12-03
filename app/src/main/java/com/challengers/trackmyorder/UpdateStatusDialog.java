@@ -10,9 +10,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-/**
- * Created by rajesh on 5/14/2016.
- */
+
 public class UpdateStatusDialog extends DialogFragment {
     private String[] orderList;
     private ArrayList<String> checkedItems ;

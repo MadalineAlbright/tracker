@@ -23,10 +23,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-/**
- * Copyright (c) 2016 Kalyan Dechiraju
- * Created by kalyandechiraju on 14/05/16.
- */
+
 public class LocationUpdateService extends Service implements LocationListener, GoogleApiClient.ConnectionCallbacks {
     //PowerManager.WakeLock wakeLock;
     private GoogleApiClient mGoogleApiClient;

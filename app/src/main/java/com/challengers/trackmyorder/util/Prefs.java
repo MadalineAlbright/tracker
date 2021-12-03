@@ -12,10 +12,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Copyright (c) 2016 Kalyan Dechiraju
- * Created by kalyandechiraju on 14/05/16.
- */
 
 @SuppressWarnings("unused")
 public final class Prefs {

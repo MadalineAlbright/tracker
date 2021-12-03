@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 
 public class OrderDetailActivity extends AppCompatActivity {
 
-    TextView orderIdText, orderDelBoy, orderUser, locationText;
+    TextView orderIdText, orderDriver, orderCustomer, locationText;
     TextView itemInOrderText;
     TextView statusText;
     ImageView staticUserLocationImage;
@@ -42,8 +42,8 @@ public class OrderDetailActivity extends AppCompatActivity {
                 itemInOrderText = (TextView) findViewById(R.id.order_detail_item);
                 statusText = (TextView) findViewById(R.id.order_detail_status);
                 staticUserLocationImage = (ImageView) findViewById(R.id.user_location_static_map);
-                orderDelBoy = (TextView) findViewById(R.id.order_delBoy);
-                orderUser = (TextView) findViewById(R.id.order_user);
+                orderDriver = (TextView) findViewById(R.id.order_delBoy);
+                orderCustomer = (TextView) findViewById(R.id.order_user);
                 locationText = (TextView) findViewById(R.id.order_details_location_text);
 
                 Firebase currentOrderRef = Constants.orderRef.child("/" + orderId);
@@ -64,8 +64,8 @@ public class OrderDetailActivity extends AppCompatActivity {
                         } else if(status.equals(Constants.STATUS_DELIVERED)) {
                             statusText.setText("Item Delivered");
                         }
-                        orderDelBoy.setText(delBoyId);
-                        orderUser.setText(userId);
+                        orderDriver.setText(delBoyId);
+                        orderCustomer.setText(userId);
 
                         if (!status.equals(Constants.STATUS_DELIVERED)) {
                             locationText.setVisibility(View.VISIBLE);
@@ -75,7 +75,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         String latLan = (String) dataSnapshot.child("currentLocation").getValue();
-                                        String placeUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + latLan + "&zoom=17&size=1200x250&maptype=roadmap&markers=color:red%7C" + latLan + "&key=AIzaSyBP_hEMi4Pu0VGFRRzeFH4Podfkf2qGEks";
+                                        String placeUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + latLan + "&zoom=17&size=1200x250&maptype=roadmap&markers=color:red%7C" + latLan + "&key=AIzaSyBO3My8U33Zccs9dYAMudWqtc4pk_3dMSw";
                                         Picasso.get().load(placeUrl).resize(staticUserLocationImage.getWidth(), 300).centerCrop().into(staticUserLocationImage);
                                     }
 
@@ -90,7 +90,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         String latLan = (String) dataSnapshot.child("currentLocation").getValue();
-                                        String placeUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + latLan + "&zoom=17&size=1200x250&maptype=roadmap&markers=color:red%7C" + latLan + "&key=AIzaSyBP_hEMi4Pu0VGFRRzeFH4Podfkf2qGEks";
+                                        String placeUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + latLan + "&zoom=17&size=1200x250&maptype=roadmap&markers=color:red%7C" + latLan + "&key=AIzaSyBO3My8U33Zccs9dYAMudWqtc4pk_3dMSw";
                                         Picasso.get().load(placeUrl).resize(staticUserLocationImage.getWidth(), 300).centerCrop().into(staticUserLocationImage);
                                     }
 

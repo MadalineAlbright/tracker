@@ -31,7 +31,7 @@ public class ShowUserOrdersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_user_orders);
-        setTitle("My Orders");
+        setTitle("My Parcels");
 
         if(getIntent().hasExtra(Constants.CURRENT_USER)) {
             String username = getIntent().getStringExtra(Constants.CURRENT_USER);

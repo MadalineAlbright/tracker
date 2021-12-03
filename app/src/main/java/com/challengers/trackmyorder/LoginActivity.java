@@ -13,16 +13,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.challengers.trackmyorder.util.Constants;
+import com.firebase.client.Firebase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 //import android.support.v7.app.AppCompatActivity;
 
-public class LoginActivity<password, email> extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     EditText userIdEditText,userPassEditText;
-    String userName,userPass, loginType;
+    String email,userPass, loginType;
     EditText mEmail;
     EditText mPassword;
-    Button mLoginBtn;
+    Button mLoginBtn,Gotosignupbtn;
     TextView mCreateBtn;
     FirebaseAuth fAuth;
     @Override
@@ -30,109 +35,71 @@ public class LoginActivity<password, email> extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_dboy);
         setTitle("Login");
-        mEmail = findViewById(R.id.email);
-        mPassword = findViewById(R.id.password);
-        mLoginBtn = findViewById(R.id.loginbtn);
-        mCreateBtn = findViewById(R.id.createText);
-        fAuth = FirebaseAuth.getInstance();
-        userIdEditText = (EditText) findViewById(R.id.userName);
-        userPassEditText = (EditText) findViewById(R.id.userPass);
 
-        loginType = getIntent().getStringExtra(Constants.LOGINTYPE);
+        mLoginBtn = findViewById(R.id.loginbtn);
+        Gotosignupbtn = findViewById(R.id.Gotosignupbtn);
+        Gotosignupbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent (LoginActivity.this,OrderDetailActivity.class));
+            }
+        });
+
+
+        //7mCreateBtn = findViewById(R.id.createText);
+        fAuth = FirebaseAuth.getInstance();
+        userIdEditText = (EditText) findViewById(R.id.email);
+        userPassEditText = (EditText) findViewById(R.id.userPass);
+        mLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doLogin();
+            }
+        });
+
+        //loginType = getIntent().getStringExtra(Constants.LOGINTYPE);
     }
 
-    public void doLogin(View v){
-        userName = userIdEditText.getText().toString();
+    public void doLogin(){
+        email = userIdEditText.getText().toString();
         userPass = userPassEditText.getText().toString();
-        if(loginType.equals("D")) {
 
 
 
 
-        }
-
-    });
-
-            if (
                     //check if email field is empty
                 if (TextUtils.isEmpty(email)){
         mEmail.setError("Email is required.");
         return;
-    }
+                }
+
 
     //check if password field is empty
-                if (TextUtils.isEmpty(password)){
+                if (TextUtils.isEmpty(userPass)){
         mPassword.setError("Please enter your password");
         return;
     }
+        fAuth.signInWithEmailAndPassword(email, userPass)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = fAuth.getCurrentUser();
+                            Intent intent = new Intent(LoginActivity.this,OrderDetailActivity.class);
+                            startActivity(intent);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
-                if (password.length() (6){
-        mPassword.setError("Password must have more than six characters");
-        return;
-    }) {
-                Intent intent = new Intent(this, DboyActivity.class);
-                startActivity(intent);
-            } else {
-                Toast.makeText(this, "Wrong Username or Password", Toast.LENGTH_SHORT).show();
-            }
-        } else {
 
-            if (
-                    //check if email field is empty
-        if (TextUtils.isEmpty(email)){
-        mEmail.setError("Email is required.");
-        return;
-        }
-
-        //check if password field is empty
-        if (TextUtils.isEmpty(password)){
-        mPassword.setError("Please enter your password");
-        return;
-        }
-
-        if (password.length() < 6){
-        mPassword.setError("Password must have more than six characters");
-        return;
-        }) {
-                Intent intent = new Intent(this, ShowUserOrdersActivity.class
-                startActivity(intent); //correct
-            } else {
-                Toast.makeText(this, "Wrong Username or Password", Toast.LENGTH_SHORT).show();
-            }
         }
 
     }
-                    //authenticating user
-                    fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-@Override
-public void onComplete(@NonNull Task<AuthResult> task) {
-        //checks whether task was successful
-        if (task.isSuccessful()){
-        Toast.makeText(LogIn.this, "Login Successful", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(getApplicationContext(),MainActivity.class));
-        }
-        else {
-        Toast.makeText(LogIn.this, "Error:" + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
-        Toast.LENGTH_SHORT).show();
-        }
-        }
-        });
-
-        }
-
-        });
-
-        mCreateBtn.setOnClickListener(new View.OnClickListener() {
-@Override
-public void onClick(View v) {
-        startActivity(new Intent(getApplicationContext(), SignUp.class));
-        }
-        });
 
 
-        }
-        }
-        }
-        });
 
-}
