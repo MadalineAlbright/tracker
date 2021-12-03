@@ -1,11 +1,8 @@
 package com.challengers.trackmyorder;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,7 +12,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -23,13 +21,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
-
 public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private EditText emailEditText,passwordEditText,ConfirmPasswordEditText;
     private String email,password,confirmPassword,userType;
-    private String []userTypes={"Driver","Customer"};
-    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private String []userTypes;
+    private FirebaseAuth firebaseAuth ;
     private Button SignUpBtn,Gotologinbtn;
 
     @Override
@@ -37,6 +34,8 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
             savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        firebaseAuth= FirebaseAuth.getInstance();
+        userTypes= new String[]{"Driver", "Customer"};
         //Getting the instance of Spinner and applying OnItemSelectedListener on it
         Spinner spin = (Spinner) findViewById(R.id.spinner);
         spin.setOnItemSelectedListener(this);
@@ -83,36 +82,46 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
     }
 
     private void registerUser() {
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("creating your account");
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
+//        ProgressDialog progressDialog = new ProgressDialog(this);
+//        progressDialog.setMessage("creating your account");
+//        progressDialog.setCanceledOnTouchOutside(false);
+//        progressDialog.show();
 
-        email = emailEditText.getText().toString().trim();
-        password = passwordEditText.getText().toString().trim();
-        confirmPassword = ConfirmPasswordEditText.getText().toString().trim();
+        email = emailEditText.getText().toString();
+        password = passwordEditText.getText().toString();
+        confirmPassword = ConfirmPasswordEditText.getText().toString();
 
 
-        if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this, "Please Enter Email", Toast.LENGTH_SHORT).show();
-            return;
+        if (TextUtils.isEmpty(email)||TextUtils.isEmpty(password)||TextUtils.isEmpty(confirmPassword)) {
+            Toast.makeText(this, "Please fill all values", Toast.LENGTH_SHORT).show();
+
         }
-        if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Please Enter Your Password", Toast.LENGTH_SHORT).show();
-            return;
+        else{
+            if (!password.equals(confirmPassword)) {
+                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+
+            }
+            else{
+                firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@androidx.annotation.NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(SignUp.this, "Registration is successful", Toast.LENGTH_SHORT).show();
+
+                        }
+                        else {
+                            Toast.makeText(SignUp.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+            }
         }
-        if (TextUtils.isEmpty(confirmPassword)) {
-            Toast.makeText(this, "Confirm your Password", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!password.equals(confirmPassword)) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(userType)) {
+
+        /*if (TextUtils.isEmpty(userType)) {
             Toast.makeText(this, "Select the usertype", Toast.LENGTH_SHORT).show();
             return;
-        }
+        }*/
 
 
         firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -123,7 +132,7 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
                             // Sign in success, update UI with the signed-in user's information
 
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            Intent intent = new Intent(SignUp.this,OrderDetailActivity.class);
+                            Intent intent = new Intent(SignUp.this,LoginActivity.class);
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.

@@ -75,7 +75,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         String latLan = (String) dataSnapshot.child("currentLocation").getValue();
-                                        String placeUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + latLan + "&zoom=17&size=1200x250&maptype=roadmap&markers=color:red%7C" + latLan + "&key=AIzaSyBO3My8U33Zccs9dYAMudWqtc4pk_3dMSw";
+                                        String placeUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + latLan + "&zoom=17&size=1200x250&maptype=roadmap&markers=color:red%7C" + latLan + "&key=AIzaSyBAYCFG1IuIM9zrS3Tg_vuwUkjUIXy_rGU";
                                         Picasso.get().load(placeUrl).resize(staticUserLocationImage.getWidth(), 300).centerCrop().into(staticUserLocationImage);
                                     }
 
@@ -90,7 +90,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         String latLan = (String) dataSnapshot.child("currentLocation").getValue();
-                                        String placeUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + latLan + "&zoom=17&size=1200x250&maptype=roadmap&markers=color:red%7C" + latLan + "&key=AIzaSyBO3My8U33Zccs9dYAMudWqtc4pk_3dMSw";
+                                        String placeUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + latLan + "&zoom=17&size=1200x250&maptype=roadmap&markers=color:red%7C" + latLan + "&key=AIzaSyBAYCFG1IuIM9zrS3Tg_vuwUkjUIXy_rGU";
                                         Picasso.get().load(placeUrl).resize(staticUserLocationImage.getWidth(), 300).centerCrop().into(staticUserLocationImage);
                                     }
 

@@ -12,7 +12,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:text="Going To Deliver"
+        android:text="To be transported"
         android:id="@+id/GTDeliver"
         android:background="@color/colorAccent"
         android:textColor="#fefefe"
@@ -27,7 +27,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:text="Picked Up"
+        android:text="Transported"
         android:id="@+id/button2"
         android:background="@color/colorAccent"
         android:textColor="#fefefe"

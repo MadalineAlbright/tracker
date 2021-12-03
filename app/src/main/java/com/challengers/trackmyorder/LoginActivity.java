@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         Gotosignupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent (LoginActivity.this,OrderDetailActivity.class));
+                startActivity(new Intent (LoginActivity.this,SignUp.class));
             }
         });
 
@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     //check if email field is empty
                 if (TextUtils.isEmpty(email)){
-        mEmail.setError("Email is required.");
+        mEmail.setError("Email is required");
         return;
                 }
 

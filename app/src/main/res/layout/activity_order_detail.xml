@@ -21,7 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Order Id"
+                android:text="Parcel Id"
                 android:textColor="@color/colorAccent"
                 style="@style/TextAppearance.AppCompat.Large"/>
 
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:text="order1001"
+                android:text="parcel1001"
                 style="@style/TextAppearance.AppCompat.Medium"/>
 
             <TextView
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:text="Item in the Order"
+                android:text="Parcel in the process"
                 android:textColor="@color/colorAccent"
                 style="@style/TextAppearance.AppCompat.Large"/>
 
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:text="Item"
+                android:text="Parcel"
                 style="@style/TextAppearance.AppCompat.Medium"/>
 
             <TextView
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:text="Ordered By"
+                android:text="Sent By"
                 android:textColor="@color/colorAccent"
                 style="@style/TextAppearance.AppCompat.Large"/>
 
