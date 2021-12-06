@@ -19,23 +19,28 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private EditText emailEditText,passwordEditText,ConfirmPasswordEditText;
-    private String email,password,confirmPassword,userType;
-    private String []userTypes;
-    private FirebaseAuth firebaseAuth ;
-    private Button SignUpBtn,Gotologinbtn;
+    private EditText emailEditText, passwordEditText, ConfirmPasswordEditText;
+    private String email, password, confirmPassword, userType;
+    private String[] userTypes;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firebaseFirestore;
+    private Button SignUpBtn, Gotologinbtn;
 
     @Override
     protected void onCreate(Bundle
-            savedInstanceState) {
+                                    savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        firebaseAuth= FirebaseAuth.getInstance();
-        userTypes= new String[]{"Driver", "Customer"};
+        firebaseAuth = FirebaseAuth.getInstance();
+        userTypes = new String[]{"Driver", "Customer"};
         //Getting the instance of Spinner and applying OnItemSelectedListener on it
         Spinner spin = (Spinner) findViewById(R.id.spinner);
         spin.setOnItemSelectedListener(this);
@@ -69,14 +74,12 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
                 registerUser();
             }
         });
-    Gotologinbtn.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            startActivity(new Intent (SignUp.this,LoginActivity.class));
-        }
-    });
-
-
+        Gotologinbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SignUp.this, LoginActivity.class));
+            }
+        });
 
 
     }
@@ -92,31 +95,23 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
         confirmPassword = ConfirmPasswordEditText.getText().toString();
 
 
-        if (TextUtils.isEmpty(email)||TextUtils.isEmpty(password)||TextUtils.isEmpty(confirmPassword)) {
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
             Toast.makeText(this, "Please fill all values", Toast.LENGTH_SHORT).show();
+            return;
 
         }
-        else{
-            if (!password.equals(confirmPassword)) {
-                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
 
-            }
-            else{
-                firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@androidx.annotation.NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(SignUp.this, "Registration is successful", Toast.LENGTH_SHORT).show();
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            return;
 
-                        }
-                        else {
-                            Toast.makeText(SignUp.this, "Registration failed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
 
-            }
         }
+
+
+
+
+
 
         /*if (TextUtils.isEmpty(userType)) {
             Toast.makeText(this, "Select the usertype", Toast.LENGTH_SHORT).show();
@@ -132,8 +127,8 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
                             // Sign in success, update UI with the signed-in user's information
 
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            Intent intent = new Intent(SignUp.this,LoginActivity.class);
-                            startActivity(intent);
+                            String userid = user.getUid();
+                            addToFirestore(userid);
                         } else {
                             // If sign in fails, display a message to the user.
 
@@ -145,6 +140,32 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
                 });
 
 
+    }
+
+    private void addToFirestore(String userid) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("user_type", userType);
+        firebaseFirestore.collection("users")
+                .document(userid)
+                .set(data)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(SignUp.this, "Registration is successful", Toast.LENGTH_SHORT).show();
+                    if (userType.equals("Driver")) {
+                        startActivity(new Intent(SignUp.this, DboyActivity.class));
+                    } else if (userType.equals("Customer")) {
+                        startActivity(new Intent(SignUp.this, OrderDetailActivity.class));
+
+
+                    } else if (userType.equals("admin")) {
+                        startActivity(new Intent(SignUp.this, OrderDetailActivity.class));
+
+                    }
+
+                })
+                .addOnFailureListener(e -> {
+
+                    Toast.makeText(SignUp.this, "Something went wrong! Try again later", Toast.LENGTH_SHORT).show();
+                });
     }
 
 
