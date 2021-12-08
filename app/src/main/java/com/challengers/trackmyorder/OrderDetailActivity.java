@@ -30,6 +30,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
 
+        Toast.makeText(this, ""+getIntent().hasExtra(Constants.ORDER_ID), Toast.LENGTH_LONG).show();
         if(getIntent().hasExtra(Constants.ORDER_ID)) {
             orderId = getIntent().getStringExtra(Constants.ORDER_ID);
             mapType = getIntent().getStringExtra(Constants.MAPS_TYPE);
@@ -69,7 +70,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
                         if (!status.equals(Constants.STATUS_DELIVERED)) {
                             locationText.setVisibility(View.VISIBLE);
-                            if (mapType.equals("D")) {
+                            if (mapType.equals("Driver")) {
                                 Firebase currentUserRef = Constants.userRef.child("/" + userId);
                                 currentUserRef.addValueEventListener(new ValueEventListener() {
                                     @Override
@@ -84,7 +85,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                                         Toast.makeText(OrderDetailActivity.this, "Check network connection", Toast.LENGTH_SHORT).show();
                                     }
                                 });
-                            } else if (mapType.equals("U")) {
+                            } else if (mapType.equals("Customer")) {
                                 Firebase currentDelBoyRef = Constants.delboyRef.child("/" + delBoyId);
                                 currentDelBoyRef.addValueEventListener(new ValueEventListener() {
                                     @Override

@@ -100,14 +100,14 @@ public class LoginActivity extends AppCompatActivity {
 
 
                                 } else if (user_type.equals("Customer")) {
-                                    Intent intent = new Intent(LoginActivity.this, OrderDetailActivity.class);
+                                    Intent intent = new Intent(LoginActivity.this, ShowUserOrdersActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                                     startActivity(intent);
 
 
                                 } else if (user_type.equals("admin")) {
-                                    Intent intent = new Intent(LoginActivity.this, OrderDetailActivity.class);
+                                    Intent intent = new Intent(LoginActivity.this, ShowUserOrdersActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                                     startActivity(intent);

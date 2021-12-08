@@ -25,7 +25,7 @@
             android:name=".SignUp"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ShowUserOrdersActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,15 +33,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
         <activity android:name=".DboyActivity" />
+        <activity android:name=".LoginActivity" />
         <activity android:name=".UpdateOrderActivity" />
 
         <service
             android:name=".service.LocationUpdateService"
             android:exported="false" />
 
-        <activity android:name=".OrderDetailActivity" />
+        <activity android:name=".MainActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -57,7 +57,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".ShowUserOrdersActivity" />
+        <activity android:name=".OrderDetailActivity" />
     </application>
 
 </manifest>

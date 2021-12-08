@@ -40,6 +40,7 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
         userTypes = new String[]{"Driver", "Customer"};
         //Getting the instance of Spinner and applying OnItemSelectedListener on it
         Spinner spin = (Spinner) findViewById(R.id.spinner);
@@ -143,7 +144,7 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
     }
 
     private void addToFirestore(String userid) {
-        Map<String, Object> data = new HashMap<>();
+        HashMap<String, Object> data = new HashMap<>();
         data.put("user_type", userType);
         firebaseFirestore.collection("users")
                 .document(userid)
@@ -153,11 +154,11 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
                     if (userType.equals("Driver")) {
                         startActivity(new Intent(SignUp.this, DboyActivity.class));
                     } else if (userType.equals("Customer")) {
-                        startActivity(new Intent(SignUp.this, OrderDetailActivity.class));
+                        startActivity(new Intent(SignUp.this, ShowUserOrdersActivity.class));
 
 
                     } else if (userType.equals("admin")) {
-                        startActivity(new Intent(SignUp.this, OrderDetailActivity.class));
+                        startActivity(new Intent(SignUp.this, ShowUserOrdersActivity.class));
 
                     }
 

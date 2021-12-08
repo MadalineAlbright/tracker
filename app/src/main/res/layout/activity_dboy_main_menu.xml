@@ -10,35 +10,34 @@
     tools:context=".DboyActivity">
 
     <Button
+        android:id="@+id/dboy_my_order"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:text="My Parcels"
-        android:id="@+id/dboy_my_order"
-        android:background="@color/colorAccent"
-        android:textColor="#fefefe"
-        android:gravity="center"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="135dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
+        android:layout_marginTop="135dp"
+        android:background="@color/colorAccent"
+        android:gravity="center"
+        android:text="My Parcels"
+        android:textColor="#212121" />
 
 
     <Button
+        android:id="@+id/dboy_update_status"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:text="Update Status"
-        android:id="@+id/dboy_update_status"
+        android:layout_alignEnd="@+id/dboy_my_order"
+        android:layout_alignRight="@+id/dboy_my_order"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:background="@color/colorAccent"
-        android:textColor="#fefefe"
         android:gravity="center"
         android:onClick="launchUpdateOrderStatusActivity"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/dboy_my_order"
-        android:layout_alignEnd="@+id/dboy_my_order" />
+        android:text="Update Status"
+        android:textColor="#212121" />
 
 </RelativeLayout>

@@ -29,7 +29,7 @@ public class PickOrderDialog extends DialogFragment{
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
                         intent.putExtra(Constants.ORDER_ID, orders[which]);
-                        intent.putExtra(Constants.MAPS_TYPE, "D");
+                        intent.putExtra(Constants.MAPS_TYPE, "Driver");
                         startActivity(intent);
                     }
                 });
