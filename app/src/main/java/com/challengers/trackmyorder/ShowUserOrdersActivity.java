@@ -7,63 +7,59 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.challengers.trackmyorder.model.Product;
 import com.challengers.trackmyorder.util.Constants;
-import com.challengers.trackmyorder.util.Prefs;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ShowUserOrdersActivity extends AppCompatActivity {
-
-    String[] orders;
-    ListView l;
+    private FirebaseAuth fAuth;
+    private FirebaseFirestore firestore;
+    private ListView productOrdersLV;
+    private ArrayList<Product> products;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_user_orders);
         setTitle("My Parcels");
+        productOrdersLV = findViewById(R.id.productOrdersLV);
+        fAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        products = new ArrayList<>();
 
         if(getIntent().hasExtra(Constants.CURRENT_USER)) {
             String username = getIntent().getStringExtra(Constants.CURRENT_USER);
-            Prefs.putString(Constants.CURRENT_USER, username);
-
-            Firebase currentUserRef = Constants.userRef.child("/" + username);
-            currentUserRef.addValueEventListener(new ValueEventListener() {
+            CollectionReference colRef = firestore.collection("orders");
+            colRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String ordersWithUser = (String) dataSnapshot.child("currentOrders").getValue();
-                    orders = ordersWithUser.split(Constants.LOCATION_DELIMITER);
-                    if (orders.length > 0) {
-                        l = (ListView) findViewById(R.id.listView);
-                        CustomUserOrderArrayAdapter customUserOrderArrayAdapter = new CustomUserOrderArrayAdapter(ShowUserOrdersActivity.this, orders);
-                        l.setAdapter(customUserOrderArrayAdapter);
-                        l.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                Intent intent = new Intent(ShowUserOrdersActivity.this, OrderDetailActivity.class);
-                                intent.putExtra(Constants.ORDER_ID, orders[i]);
-                                intent.putExtra(Constants.MAPS_TYPE, "U");
-                                startActivity(intent);
-                            }
-                        });
-                    } else {
-                        Toast.makeText(ShowUserOrdersActivity.this, "No Active Orders available", Toast.LENGTH_SHORT).show();
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    for(QueryDocumentSnapshot obj:queryDocumentSnapshots){
+                        Product product = obj.toObject(Product.class);
+                        products.add(product);
                     }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    Toast.makeText(ShowUserOrdersActivity.this, "Check network connection", Toast.LENGTH_SHORT).show();
+                    productOrdersLV.setAdapter(new CustomUserOrderArrayAdapter(ShowUserOrdersActivity.this,products,username));
                 }
             });
         } else {
@@ -72,26 +68,47 @@ public class ShowUserOrdersActivity extends AppCompatActivity {
         }
     }
 
-    private class CustomUserOrderArrayAdapter extends  ArrayAdapter<String> {
-        Context ctx;
-        String orders[];
-        public CustomUserOrderArrayAdapter(Context ctx,String[] ordersList) {
-
-            super(ctx,R.layout.user_order_list_item,R.id.text1,ordersList);
-            this.ctx = ctx;
+    private class CustomUserOrderArrayAdapter extends  ArrayAdapter<Product> {
+        Context context;
+        ArrayList<Product> orders;
+        String userId;
+        public CustomUserOrderArrayAdapter(Context context, ArrayList<Product> ordersList,String userId) {
+            super(context,0,ordersList);
+            this.context = context;
             this.orders = ordersList;
+            this.userId = userId;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View row = convertView;
-            if(row == null) {
-                LayoutInflater layoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                row = layoutInflater.inflate(R.layout.user_order_list_item, parent, false);
+            Product product = getItem(position);
+
+            if(convertView == null){
+                convertView = LayoutInflater.from(context).inflate(R.layout.user_order_list_item,parent,false);
             }
-            TextView textView = (TextView) row.findViewById(R.id.text1);
-            textView.setText(orders[position]);
-            return row;
+            TextView ckName = convertView.findViewById(R.id.ckName);
+            TextView ckDes = convertView.findViewById(R.id.ckDes);
+            TextView ckPrice = convertView.findViewById(R.id.ckPrice);
+            TextView ckTime = convertView.findViewById(R.id.ckTime);
+            Button trackMapBtn = convertView.findViewById(R.id.trackBtn);
+
+            if(product.getUserId().equals(userId)){
+                ckName.setText(product.getProdName());
+                ckDes.setText(product.getProdDes());
+                ckPrice.setText(String.valueOf(product.getProdPrice()));
+                ckTime.setText(product.getDate());
+                trackMapBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent mapsActivity = new Intent(ShowUserOrdersActivity.this,MapsActivity.class);
+                        mapsActivity.putExtra(Constants.MAPS_TYPE,"customer");
+                        mapsActivity.putExtra(Constants.CURRENT_USER,userId);
+                        startActivity(mapsActivity);
+                    }
+                });
+            }
+
+            return convertView;
         }
     }
 }

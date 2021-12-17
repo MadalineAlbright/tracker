@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.putExtra(Constants.LOGINTYPE, "U");
+                intent.putExtra(Constants.LOGINTYPE, "Customer");
                 startActivity(intent);
             }
         });
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void deliveryBoy(View v) {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        intent.putExtra(Constants.LOGINTYPE, "D");
+        intent.putExtra(Constants.LOGINTYPE, "Driver");
         startActivity(intent);
     }
 }

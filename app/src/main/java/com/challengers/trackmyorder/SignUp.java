@@ -1,6 +1,5 @@
 package com.challengers.trackmyorder;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,9 +8,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,42 +23,37 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
-import java.util.Map;
 
 
 public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private EditText emailEditText, passwordEditText, ConfirmPasswordEditText;
+    private EditText emailEditText, passwordEditText, confirmPasswordEditText;
     private String email, password, confirmPassword, userType;
     private String[] userTypes;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private Button SignUpBtn, Gotologinbtn;
+    private ProgressBar progReg;
 
     @Override
-    protected void onCreate(Bundle
-                                    savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         userTypes = new String[]{"Driver", "Customer"};
+
         //Getting the instance of Spinner and applying OnItemSelectedListener on it
-        Spinner spin = (Spinner) findViewById(R.id.spinner);
+        progReg = findViewById(R.id.progReg);
+        Spinner spin = (Spinner) findViewById(R.id.spinnerReg);
         spin.setOnItemSelectedListener(this);
         // Create the instance of ArrayAdapter
         // having the list of courses
-        ArrayAdapter ad
-                = new ArrayAdapter(
-                this,
-                android.R.layout.simple_spinner_item,
-                userTypes);
+        ArrayAdapter ad = new ArrayAdapter(this, android.R.layout.simple_spinner_item, userTypes);
 
         // set simple layout resource file
         // for each item of spinner
-        ad.setDropDownViewResource(
-                android.R.layout
-                        .simple_spinner_dropdown_item);
+        ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // Set the ArrayAdapter (ad) data on the
         // Spinner which binds data to spinner
@@ -66,7 +62,7 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
 
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.userPass);
-        ConfirmPasswordEditText = findViewById(R.id.confirmPassword);
+        confirmPasswordEditText = findViewById(R.id.confirmPassword);
         SignUpBtn = findViewById(R.id.SignUpBtn);
         Gotologinbtn = findViewById(R.id.Gotologinbtn);
         SignUpBtn.setOnClickListener(new View.OnClickListener() {
@@ -90,57 +86,44 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
 //        progressDialog.setMessage("creating your account");
 //        progressDialog.setCanceledOnTouchOutside(false);
 //        progressDialog.show();
-
-        email = emailEditText.getText().toString();
-        password = passwordEditText.getText().toString();
-        confirmPassword = ConfirmPasswordEditText.getText().toString();
+        progReg.setVisibility(View.VISIBLE);
+        email = emailEditText.getText().toString().trim();
+        password = passwordEditText.getText().toString().trim();
+        confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
             Toast.makeText(this, "Please fill all values", Toast.LENGTH_SHORT).show();
-            return;
-
         }
+        else{
+            if (!password.equals(confirmPassword)) {
+                confirmPasswordEditText.setError("Password Mismatch");
+            }
+            else{
+                if(password.length()>=6){
+                    firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-        if (!password.equals(confirmPassword)) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-            return;
-
-
-        }
-
-
-
-
-
-
-        /*if (TextUtils.isEmpty(userType)) {
-            Toast.makeText(this, "Select the usertype", Toast.LENGTH_SHORT).show();
-            return;
-        }*/
-
-
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            String userid = user.getUid();
-                            addToFirestore(userid);
-                        } else {
-                            // If sign in fails, display a message to the user.
-
-                            Toast.makeText(SignUp.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-
+                            if(task.isSuccessful()){
+                                FirebaseUser user = firebaseAuth.getCurrentUser();
+                                String userid = user.getUid();
+                                addToFirestore(userid);
+                            }
+                            else{
+                                progReg.setVisibility(View.INVISIBLE);
+                                Toast.makeText(SignUp.this, "Failed to register User", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
-
-
+                    });
+                }
+                else{
+                    progReg.setVisibility(View.INVISIBLE);
+                    passwordEditText.setError("Weak Password");
+                    confirmPasswordEditText.setError("Weak Password");
+                }
+            }
+        }
     }
 
     private void addToFirestore(String userid) {
@@ -154,9 +137,7 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
                     if (userType.equals("Driver")) {
                         startActivity(new Intent(SignUp.this, DboyActivity.class));
                     } else if (userType.equals("Customer")) {
-                        startActivity(new Intent(SignUp.this, ShowUserOrdersActivity.class));
-
-
+                        startActivity(new Intent(SignUp.this, OrderProductActivity.class));
                     } else if (userType.equals("admin")) {
                         startActivity(new Intent(SignUp.this, ShowUserOrdersActivity.class));
 
@@ -164,7 +145,7 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
 
                 })
                 .addOnFailureListener(e -> {
-
+                    progReg.setVisibility(View.INVISIBLE);
                     Toast.makeText(SignUp.this, "Something went wrong! Try again later", Toast.LENGTH_SHORT).show();
                 });
     }
