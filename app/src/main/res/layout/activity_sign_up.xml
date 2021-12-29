@@ -53,36 +53,37 @@
 
     <Spinner
         android:id="@+id/spinnerReg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="600dp"
+        android:layout_height="60dp"
         android:layout_below="@id/confirmPassword"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="189dp"
-        android:layout_marginLeft="189dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="190dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="235dp"
         android:layout_marginBottom="8dp" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign Up"
         android:id="@+id/SignUpBtn"
         style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_below="@+id/spinnerReg"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="64dp" />
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Already have an account? Log in"
+        android:layout_below="@+id/spinnerReg"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="210dp"
+        android:text="Sign Up" />
+
+    <Button
         android:id="@+id/Gotologinbtn"
         style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/SignUpBtn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="64dp" />
+        android:layout_marginTop="20dp"
+        android:text="Already have an account? Log in" />
 
     <ProgressBar
         android:id="@+id/progReg"

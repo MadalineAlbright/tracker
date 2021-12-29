@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.challengers.trackmyorder.util.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -39,10 +40,16 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         userTypes = new String[]{"Driver", "Customer"};
 
+        if(firebaseAuth.getCurrentUser() != null){
+            Intent intent = new Intent(SignUp.this, OrderProductActivity.class);
+            intent.putExtra(Constants.CURRENT_USER,firebaseAuth.getCurrentUser().getUid());
+        }
         //Getting the instance of Spinner and applying OnItemSelectedListener on it
         progReg = findViewById(R.id.progReg);
         Spinner spin = (Spinner) findViewById(R.id.spinnerReg);
@@ -59,7 +66,6 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
         // Spinner which binds data to spinner
         spin.setAdapter(ad);
 
-
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.userPass);
         confirmPasswordEditText = findViewById(R.id.confirmPassword);
@@ -74,7 +80,9 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
         Gotologinbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SignUp.this, LoginActivity.class));
+                Intent login =new Intent(SignUp.this, LoginActivity.class);
+                login.putExtra(Constants.LOGINTYPE,getIntent().getStringExtra(Constants.LOGINTYPE));
+                startActivity(login);
             }
         });
 
@@ -82,10 +90,6 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
     }
 
     private void registerUser() {
-//        ProgressDialog progressDialog = new ProgressDialog(this);
-//        progressDialog.setMessage("creating your account");
-//        progressDialog.setCanceledOnTouchOutside(false);
-//        progressDialog.show();
         progReg.setVisibility(View.VISIBLE);
         email = emailEditText.getText().toString().trim();
         password = passwordEditText.getText().toString().trim();
@@ -135,9 +139,13 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(SignUp.this, "Registration is successful", Toast.LENGTH_SHORT).show();
                     if (userType.equals("Driver")) {
-                        startActivity(new Intent(SignUp.this, DboyActivity.class));
+                        Intent driver = new Intent(SignUp.this, DboyActivity.class);
+                        driver.putExtra(Constants.CURRENT_DELBOY,userid);
+                        startActivity(driver);
                     } else if (userType.equals("Customer")) {
-                        startActivity(new Intent(SignUp.this, OrderProductActivity.class));
+                        Intent order = new Intent(SignUp.this, OrderProductActivity.class);
+                        order.putExtra(Constants.CURRENT_USER,userid);
+                        startActivity(order);
                     } else if (userType.equals("admin")) {
                         startActivity(new Intent(SignUp.this, ShowUserOrdersActivity.class));
 

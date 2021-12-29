@@ -26,9 +26,9 @@ public class PickOrderDialog extends DialogFragment{
         builder.setTitle("Please select your order")
                 .setItems(orders, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int index) {
                         Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-                        intent.putExtra(Constants.ORDER_ID, orders[which]);
+                        intent.putExtra(Constants.ORDER_ID, orders[index]);
                         intent.putExtra(Constants.MAPS_TYPE, "Driver");
                         startActivity(intent);
                     }

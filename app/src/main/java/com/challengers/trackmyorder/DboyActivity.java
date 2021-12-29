@@ -21,8 +21,6 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-//import android.support.v4.app.ActivityCompat;
-//import android.support.v7.app.AppCompatActivity;
 
 public class DboyActivity extends AppCompatActivity {
 
@@ -35,10 +33,10 @@ public class DboyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dboy_main_menu);
+        setTitle("This is the page");
 
         if(getIntent().hasExtra(Constants.CURRENT_DELBOY)) {
             String username = getIntent().getStringExtra(Constants.CURRENT_DELBOY);
-            Prefs.putString(Constants.CURRENT_DELBOY, username);
 
             //Get the data from the local DB
             //Realm realm = Realm.getDefaultInstance();
@@ -70,7 +68,6 @@ public class DboyActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, "Customer not logged in", Toast.LENGTH_SHORT).show();
             finish();
         }
 

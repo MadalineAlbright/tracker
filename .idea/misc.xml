@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/danro/AndroidStudioProjects/tracker/app/src/main/res/drawable/ic_directions_bike_black_24dp.xml" value="0.15" />
         <entry key="..\:/Users/danro/AndroidStudioProjects/tracker/app/src/main/res/layout/activity_dboy_main_menu.xml" value="0.13385416666666666" />
         <entry key="..\:/Users/danro/AndroidStudioProjects/tracker/app/src/main/res/layout/activity_login_dboy.xml" value="0.264" />
         <entry key="..\:/Users/danro/AndroidStudioProjects/tracker/app/src/main/res/layout/activity_main.xml" value="0.13385416666666666" />

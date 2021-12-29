@@ -122,14 +122,14 @@ public class AppClass extends Application {
         user3.setUsername("email");
         user3.setCurrentOrderId(order3.getOrderId());
 
-        realm.beginTransaction();
+        /*realm.beginTransaction();
         realm.copyToRealmOrUpdate(delBoy);
         realm.copyToRealmOrUpdate(orderList);
         realm.copyToRealmOrUpdate(user);
         realm.copyToRealmOrUpdate(user1);
         realm.copyToRealmOrUpdate(user2);
         realm.copyToRealmOrUpdate(user3);
-        realm.commitTransaction();
+        realm.commitTransaction();*/
 
         Prefs.putBoolean(Constants.FIRST_RUN_KEY, false);
     }
