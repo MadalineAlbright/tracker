@@ -30,7 +30,7 @@
         <activity
             android:name=".ShowUserOrdersActivity"
             android:exported="false" />
-        <activity android:name=".DboyActivity" />
+        <activity android:name=".DeliveryBoyActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".UpdateOrderActivity" />
 

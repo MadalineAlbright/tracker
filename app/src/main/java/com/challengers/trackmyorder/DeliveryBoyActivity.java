@@ -15,17 +15,19 @@ import androidx.core.app.ActivityCompat;
 
 import com.challengers.trackmyorder.service.LocationUpdateService;
 import com.challengers.trackmyorder.util.Constants;
-import com.challengers.trackmyorder.util.Prefs;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
-public class DboyActivity extends AppCompatActivity {
+public class DeliveryBoyActivity extends AppCompatActivity {
 
+    private FirebaseUser currentUser;
     private String[] orders;
-    private String orderList;
+    private String orderList, userId;
     private Button myOrdersButton;
     private static int LOCATION_REQUEST_CODE = 101;
 
@@ -33,24 +35,31 @@ public class DboyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dboy_main_menu);
-        setTitle("This is the page");
 
         if(getIntent().hasExtra(Constants.CURRENT_DELBOY)) {
-            String username = getIntent().getStringExtra(Constants.CURRENT_DELBOY);
+            currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            userId = getIntent().getStringExtra(Constants.CURRENT_DELBOY);
 
-            //Get the data from the local DB
-            //Realm realm = Realm.getDefaultInstance();
+            setTitle(""+currentUser.getEmail());
 
-            myOrdersButton = (Button) findViewById(R.id.dboy_my_order);
+            myOrdersButton = (Button) findViewById(R.id.availableParcelBtn);
 
-            Firebase currentDelBoyRef = Constants.delboyRef.child("/" + username);
+            myOrdersButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PickOrderDialog pickOrderDialog = new PickOrderDialog();
+                    pickOrderDialog.setOrders(orders);
+                    pickOrderDialog.show(getFragmentManager(),"Pick Order Dialog");
+                }
+            });
+            Firebase currentDelBoyRef = Constants.delboyRef.child("/" + userId);
             currentDelBoyRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     orderList = (String) dataSnapshot.child("currentOrders").getValue();
                     orders = orderList.split(Constants.LOCATION_DELIMITER);
 
-                    if(myOrdersButton != null) {
+                    /*if(myOrdersButton != null) {
                         myOrdersButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -59,12 +68,12 @@ public class DboyActivity extends AppCompatActivity {
                                 pickOrderDialog.show(getFragmentManager(),"Pick Order Dialog");
                             }
                         });
-                    }
+                    }*/
                 }
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
-                    Toast.makeText(DboyActivity.this, "Check network connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DeliveryBoyActivity.this, "Check network connection", Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -88,7 +97,7 @@ public class DboyActivity extends AppCompatActivity {
     }
 
     public void launchUpdateOrderStatusActivity(View v){
-        startActivity(new Intent(DboyActivity.this,UpdateOrderActivity.class));
+        startActivity(new Intent(DeliveryBoyActivity.this,UpdateOrderActivity.class));
     }
 
     @Override
@@ -101,7 +110,7 @@ public class DboyActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, LocationUpdateService.class);
                 startService(intent);
             } else {
-                Toast.makeText(DboyActivity.this, "Need Location permission to show in map", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DeliveryBoyActivity.this, "Need Location permission to show in map", Toast.LENGTH_SHORT).show();
             }
         }
     }

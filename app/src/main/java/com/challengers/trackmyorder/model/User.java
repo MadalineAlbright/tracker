@@ -4,14 +4,28 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 
-public class User extends RealmObject{
-    @PrimaryKey
-    private String userId;
-    private String username;
-    private String currentOrderId;
+public class User{
+    private String userId, username,type;
+
+    public User() {
+    }
+
+    public User(String userId, String username, String type) {
+        this.userId = userId;
+        this.username = username;
+        this.type = type;
+    }
 
     public String getUserId() {
         return userId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setUserId(String userId) {
@@ -24,13 +38,5 @@ public class User extends RealmObject{
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getCurrentOrderId() {
-        return currentOrderId;
-    }
-
-    public void setCurrentOrderId(String currentOrderId) {
-        this.currentOrderId = currentOrderId;
     }
 }

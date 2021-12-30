@@ -1,28 +1,27 @@
 package com.challengers.trackmyorder.model;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 
 public class Order{
-    private String orderId;
-    private String status;
-    private String orderTime;
-    private String arrivalTime;
-    private String userId;
-
-    public String getItem() {
-        return item;
-    }
-
-    public void setItem(String item) {
-        this.item = item;
-    }
-
-    private String item;
+    private String orderId,status,orderTime,arrivalTime,userId, deliveryBoyId;
     private Parcel parcel;
 
     public Order() {
+    }
+    public Order(String orderTime, Parcel parcel, String userId) {
+        this.status = "Pending";
+        this.orderTime = orderTime;
+        this.arrivalTime = "To be updated";
+        this.parcel = parcel;
+        this.userId = userId;
+    }
+
+    public String getDeliveryBoyId() {
+        return deliveryBoyId;
+    }
+
+    public void setDeliveryBoyId(String deliveryBoyId) {
+        this.deliveryBoyId = deliveryBoyId;
     }
 
     public String getUserId() {
@@ -30,14 +29,6 @@ public class Order{
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public Order(String orderTime, Parcel parcel, String userId) {
-        this.status = "Pending";
-        this.orderTime = orderTime;
-        this.arrivalTime = "In progress";
-        this.parcel = parcel;
         this.userId = userId;
     }
 

@@ -3,9 +3,7 @@ package com.challengers.trackmyorder;
 import android.app.Application;
 import android.content.ContextWrapper;
 
-import com.challengers.trackmyorder.model.DelBoy;
 import com.challengers.trackmyorder.model.Order;
-import com.challengers.trackmyorder.model.User;
 import com.challengers.trackmyorder.util.Constants;
 import com.challengers.trackmyorder.util.Prefs;
 import com.firebase.client.Firebase;
@@ -62,11 +60,11 @@ public class AppClass extends Application {
     private void populateDummyData() {
         Realm realm = Realm.getDefaultInstance();
 
-        DelBoy delBoy = new DelBoy();
+        /*DelBoy delBoy = new DelBoy();
         delBoy.setId("email");
-        delBoy.setName("Users");
+        delBoy.setName("Users");*/
 
-        Order order = new Order();
+        /*Order order = new Order();
         order.setOrderId("parcel 1001");
         order.setItem("Above 30kg");
         order.setStatus(Constants.STATUS_UNKNOWN);
@@ -99,10 +97,10 @@ public class AppClass extends Application {
             } else {
                 orderIdList = orderIdList + Constants.LOCATION_DELIMITER + orders.getOrderId();
             }
-        }
-        delBoy.setCurrentOrderIds(orderIdList);
+        }*/
+        /*delBoy.setCurrentOrderIds(orderIdList);*/
 
-        User user = new User();
+        /*User user = new User();
         user.setUserId("email");
         user.setUsername("email");
         user.setCurrentOrderId(order1.getOrderId());
@@ -120,7 +118,7 @@ public class AppClass extends Application {
         User user3 = new User();
         user3.setUserId("email");
         user3.setUsername("email");
-        user3.setCurrentOrderId(order3.getOrderId());
+        user3.setCurrentOrderId(order3.getOrderId());*/
 
         /*realm.beginTransaction();
         realm.copyToRealmOrUpdate(delBoy);

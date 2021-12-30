@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.challengers.trackmyorder.model.Customer;
+import com.challengers.trackmyorder.model.DeliveryBoy;
 import com.challengers.trackmyorder.util.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,7 +36,6 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private Button SignUpBtn, Gotologinbtn;
-    private ProgressBar progReg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +43,17 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
         setContentView(R.layout.activity_sign_up);
 
 
+        setTitle("Register "+ getIntent().getStringExtra(Constants.LOGINTYPE));
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
-        userTypes = new String[]{"Driver", "Customer"};
+        //userTypes = new String[]{"Driver", "Customer"};
 
+        userType = getIntent().getStringExtra(Constants.LOGINTYPE);
         if(firebaseAuth.getCurrentUser() != null){
             Intent intent = new Intent(SignUp.this, OrderProductActivity.class);
             intent.putExtra(Constants.CURRENT_USER,firebaseAuth.getCurrentUser().getUid());
         }
-        //Getting the instance of Spinner and applying OnItemSelectedListener on it
-        progReg = findViewById(R.id.progReg);
+        /*//Getting the instance of Spinner and applying OnItemSelectedListener on it
         Spinner spin = (Spinner) findViewById(R.id.spinnerReg);
         spin.setOnItemSelectedListener(this);
         // Create the instance of ArrayAdapter
@@ -64,7 +66,7 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
 
         // Set the ArrayAdapter (ad) data on the
         // Spinner which binds data to spinner
-        spin.setAdapter(ad);
+        spin.setAdapter(ad);*/
 
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.userPass);
@@ -90,7 +92,6 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
     }
 
     private void registerUser() {
-        progReg.setVisibility(View.VISIBLE);
         email = emailEditText.getText().toString().trim();
         password = passwordEditText.getText().toString().trim();
         confirmPassword = confirmPasswordEditText.getText().toString().trim();
@@ -108,21 +109,20 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
                     firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-
                             if(task.isSuccessful()){
                                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                                String userid = user.getUid();
-                                addToFirestore(userid);
+                                String userId = user.getUid();
+                                String userEmail = firebaseAuth.getCurrentUser().getEmail();
+                                addToFirestore(userId, userEmail);
                             }
                             else{
-                                progReg.setVisibility(View.INVISIBLE);
+                                System.out.println(task.getException());
                                 Toast.makeText(SignUp.this, "Failed to register User", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 }
                 else{
-                    progReg.setVisibility(View.INVISIBLE);
                     passwordEditText.setError("Weak Password");
                     confirmPasswordEditText.setError("Weak Password");
                 }
@@ -130,32 +130,41 @@ public class SignUp extends AppCompatActivity implements AdapterView.OnItemSelec
         }
     }
 
-    private void addToFirestore(String userid) {
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("user_type", userType);
-        firebaseFirestore.collection("users")
-                .document(userid)
-                .set(data)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(SignUp.this, "Registration is successful", Toast.LENGTH_SHORT).show();
-                    if (userType.equals("Driver")) {
-                        Intent driver = new Intent(SignUp.this, DboyActivity.class);
+    private void addToFirestore(String userid, String email) {
+        if (userType.equals("Driver")) {
+            DeliveryBoy deliveryBoy = new DeliveryBoy(userid,email);
+            firebaseFirestore.collection("users")
+                    .document(userid)
+                    .set(deliveryBoy)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(SignUp.this, "Registration is successful", Toast.LENGTH_SHORT).show();
+                        Intent driver = new Intent(SignUp.this, DeliveryBoyActivity.class);
                         driver.putExtra(Constants.CURRENT_DELBOY,userid);
                         startActivity(driver);
-                    } else if (userType.equals("Customer")) {
+
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(SignUp.this, "Something went wrong! Try again later", Toast.LENGTH_SHORT).show();
+                    });
+        }
+        else if(userType.equals("Customer")){
+            Customer customer = new Customer(userid,email);
+            firebaseFirestore.collection("users")
+                    .document(userid)
+                    .set(customer)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(SignUp.this, "Registration is successful", Toast.LENGTH_SHORT).show();
                         Intent order = new Intent(SignUp.this, OrderProductActivity.class);
                         order.putExtra(Constants.CURRENT_USER,userid);
                         startActivity(order);
-                    } else if (userType.equals("admin")) {
-                        startActivity(new Intent(SignUp.this, ShowUserOrdersActivity.class));
-
-                    }
-
-                })
-                .addOnFailureListener(e -> {
-                    progReg.setVisibility(View.INVISIBLE);
-                    Toast.makeText(SignUp.this, "Something went wrong! Try again later", Toast.LENGTH_SHORT).show();
-                });
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(SignUp.this, "Something went wrong! Try again later", Toast.LENGTH_SHORT).show();
+                    });
+        }
+        else if(userType.equals("admin")){
+            //TODO add admin page
+        }
     }
 
 
