@@ -12,15 +12,16 @@ import com.challengers.trackmyorder.util.Constants;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button userButton;
+    Button customerBtn, driverBtn;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        userButton = (Button) findViewById(R.id.user_login_button);
-        userButton.setOnClickListener(new View.OnClickListener() {
+        customerBtn = (Button) findViewById(R.id.customerBtn);
+        driverBtn = findViewById(R.id.driverBtn);
+        customerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -28,11 +29,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    public void deliveryBoy(View v) {
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        intent.putExtra(Constants.LOGINTYPE, "Driver");
-        startActivity(intent);
+        driverBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.putExtra(Constants.LOGINTYPE, "Driver");
+                startActivity(intent);
+            }
+        });
     }
 }

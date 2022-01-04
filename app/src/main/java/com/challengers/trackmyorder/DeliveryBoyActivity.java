@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,94 +25,42 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 public class DeliveryBoyActivity extends AppCompatActivity {
-
+    protected Button availableParcelsBtn, checkDeliveriesBtn;
     private FirebaseUser currentUser;
-    private String[] orders;
-    private String orderList, userId;
-    private Button myOrdersButton;
-    private static int LOCATION_REQUEST_CODE = 101;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dboy_main_menu);
 
-        if(getIntent().hasExtra(Constants.CURRENT_DELBOY)) {
+        availableParcelsBtn = findViewById(R.id.availableParcelBtn);
+        checkDeliveriesBtn = findViewById(R.id.checkDeliveriesBtn);
+
+        if (getIntent().hasExtra(Constants.CURRENT_DELBOY)) {
             currentUser = FirebaseAuth.getInstance().getCurrentUser();
             userId = getIntent().getStringExtra(Constants.CURRENT_DELBOY);
 
-            setTitle(""+currentUser.getEmail());
+            setTitle("Delivery Boy Home Page");
 
-            myOrdersButton = (Button) findViewById(R.id.availableParcelBtn);
-
-            myOrdersButton.setOnClickListener(new View.OnClickListener() {
+            availableParcelsBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PickOrderDialog pickOrderDialog = new PickOrderDialog();
-                    pickOrderDialog.setOrders(orders);
-                    pickOrderDialog.show(getFragmentManager(),"Pick Order Dialog");
+                    Intent availableParcelsIntent = new Intent(DeliveryBoyActivity.this,AvailableParcelsActivity.class);
+                    availableParcelsIntent.putExtra(Constants.DELIVERY_BOY,userId);
+                    startActivity(availableParcelsIntent);
                 }
             });
-            Firebase currentDelBoyRef = Constants.delboyRef.child("/" + userId);
-            currentDelBoyRef.addValueEventListener(new ValueEventListener() {
+            checkDeliveriesBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    orderList = (String) dataSnapshot.child("currentOrders").getValue();
-                    orders = orderList.split(Constants.LOCATION_DELIMITER);
-
-                    /*if(myOrdersButton != null) {
-                        myOrdersButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                PickOrderDialog pickOrderDialog = new PickOrderDialog();
-                                pickOrderDialog.setOrders(orders);
-                                pickOrderDialog.show(getFragmentManager(),"Pick Order Dialog");
-                            }
-                        });
-                    }*/
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    Toast.makeText(DeliveryBoyActivity.this, "Check network connection", Toast.LENGTH_SHORT).show();
+                public void onClick(View view) {
+                    Intent deliveriesIntent = new Intent(DeliveryBoyActivity.this,DeliveriesActivity.class);
+                    deliveriesIntent.putExtra(Constants.DELIVERY_BOY,userId);
+                    startActivity(deliveriesIntent);
                 }
             });
         } else {
             finish();
-        }
-
-        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    /*|| ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {*/
-                //Request for Permission
-                if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    Toast.makeText(this, "Location Permission is needed to proceed", Toast.LENGTH_SHORT).show();
-                }
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-            }
-        } else {
-            Intent intent = new Intent(this, LocationUpdateService.class);
-            startService(intent);
-        }
-
-    }
-
-    public void launchUpdateOrderStatusActivity(View v){
-        startActivity(new Intent(DeliveryBoyActivity.this,UpdateOrderActivity.class));
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == LOCATION_REQUEST_CODE) {
-            // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(this, LocationUpdateService.class);
-                startService(intent);
-            } else {
-                Toast.makeText(DeliveryBoyActivity.this, "Need Location permission to show in map", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 }

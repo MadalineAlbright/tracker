@@ -77,13 +77,13 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="120dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="120dp"
         android:text="Send Parcel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/getDestinationBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/destinationFrag" />
 
     <TextView
         android:id="@+id/destinationTV"
@@ -97,14 +97,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/parcelDesET" />
 
-    <Button
-        android:id="@+id/getDestinationBtn"
-        android:layout_width="wrap_content"
+    <!--<fragment
+        android:id="@+id/destinationFrag"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:text="Choose Destination"
+        android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.529"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/destinationTV" />
+        app:layout_constraintTop_toBottomOf="@+id/destinationTV" />-->
+
 </androidx.constraintlayout.widget.ConstraintLayout>

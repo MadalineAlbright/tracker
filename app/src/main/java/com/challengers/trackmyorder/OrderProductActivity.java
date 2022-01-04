@@ -2,7 +2,6 @@ package com.challengers.trackmyorder;
 
 import static android.content.ContentValues.TAG;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,21 +13,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlacePicker;
-
 import com.challengers.trackmyorder.model.Order;
 import com.challengers.trackmyorder.model.Parcel;
 import com.challengers.trackmyorder.util.Constants;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class OrderProductActivity extends AppCompatActivity {
@@ -39,6 +36,9 @@ public class OrderProductActivity extends AppCompatActivity {
     protected FirebaseAuth fAuth;
     protected FirebaseFirestore firestore;
     protected CollectionReference userOrders;
+    protected AutocompleteSupportFragment destinationFrag;
+    protected LatLng destinationLatLng;
+    protected String destinationName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,26 +52,30 @@ public class OrderProductActivity extends AppCompatActivity {
         parcelFrom = findViewById(R.id.parcelFromET);
         parcelDescription = findViewById(R.id.parcelDesET);
         parcelDestination = findViewById(R.id.destinationTV);
-        getDetinationBtn = findViewById(R.id.getDestinationBtn);
 
         fAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         userOrders = firestore.collection("orders");
 
-        getDetinationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        /*destinationFrag = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.destinationFrag);
 
-                try {
-                    startActivityForResult(builder.build(OrderProductActivity.this), 100);
-                } catch (GooglePlayServicesRepairableException e) {
-                    Log.e(TAG, "onClick: GooglePlayServicesRepairableException: " + e.getMessage() );
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    Log.e(TAG, "onClick: GooglePlayServicesNotAvailableException: " + e.getMessage() );
-                }
+        // Specify the types of place data to return.
+        destinationFrag.setPlaceFields(Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME));
+
+        // Set up a PlaceSelectionListener to handle the response.
+        destinationFrag.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                parcelDestination.setText(place.getName());
+                destinationLatLng = place.getLatLng();
+                destinationName = place.getName();
             }
-        });
+
+            @Override
+            public void onError(@androidx.annotation.NonNull Status status) {
+
+            }
+        });*/
 
         orderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,14 +99,15 @@ public class OrderProductActivity extends AppCompatActivity {
         String currentTime = Calendar.getInstance().getTime().toString();
         String currentUser = getIntent().getStringExtra(Constants.CURRENT_USER);
 
-        if(!parcelName.getText().toString().isEmpty()||!parcelDescription.getText().toString().isEmpty()||!parcelDestination.getText().toString().isEmpty()||!parcelTo.getText().toString().isEmpty()||!parcelFrom.getText().toString().isEmpty()){
+        if(!parcelName.getText().toString().isEmpty()||!parcelDescription.getText().toString().isEmpty()||!parcelTo.getText().toString().isEmpty()||!parcelFrom.getText().toString().isEmpty()){
             Parcel parcel = new Parcel(parcelName.getText().toString(),
                     parcelTo.getText().toString(),
                     parcelFrom.getText().toString(),
                     parcelDescription.getText().toString(),
-                    parcelDestination.getText().toString());
+                    destinationLatLng,
+                    destinationName);
             if (currentUser == null) {
-                Toast.makeText(OrderProductActivity.this, "Parcel sending has failed.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(OrderProductActivity.this, "Error has occurred, please login again to send parcel.", Toast.LENGTH_SHORT).show();
 
             }else{
                 Order order = new Order(currentTime,parcel,currentUser);

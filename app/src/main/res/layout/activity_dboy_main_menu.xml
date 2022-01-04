@@ -21,12 +21,12 @@
         android:layout_marginTop="135dp"
         android:background="@color/colorAccent"
         android:gravity="center"
-        android:text="My Parcels"
+        android:text="Check Available Parcels"
         android:textColor="#212121" />
 
 
     <Button
-        android:id="@+id/dboy_update_status"
+        android:id="@+id/checkDeliveriesBtn"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_alignEnd="@+id/availableParcelBtn"
@@ -36,8 +36,7 @@
         android:layout_centerVertical="true"
         android:background="@color/colorAccent"
         android:gravity="center"
-        android:onClick="launchUpdateOrderStatusActivity"
-        android:text="Update Status"
+        android:text="Check My Deliveries"
         android:textColor="#212121" />
 
 </RelativeLayout>

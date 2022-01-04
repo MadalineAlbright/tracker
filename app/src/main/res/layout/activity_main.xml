@@ -18,27 +18,29 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="52dp" />
+
     <Button
+        android:id="@+id/driverBtn"
+        style="@style/Base.TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:text="Driver"
-        android:onClick="deliveryBoy"
-        android:background="@color/colorAccent"
-        android:textColor="#fefefe"
-        android:gravity="center"
-        style="@style/Base.TextAppearance.AppCompat.Title"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
+        android:layout_alignEnd="@+id/customerBtn"
+        android:layout_alignRight="@+id/customerBtn"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="135dp"
-        android:layout_alignRight="@+id/user_login_button"
-        android:layout_alignEnd="@+id/user_login_button" />
+        android:background="@color/colorAccent"
+        android:gravity="center"
+        android:onClick="deliveryBoy"
+        android:text="Driver"
+        android:textColor="#fefefe" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:text="Customer"
-        android:id="@+id/user_login_button"
+        android:id="@+id/customerBtn"
         android:background="@color/colorAccent"
         android:textColor="#fefefe"
         android:gravity="center"

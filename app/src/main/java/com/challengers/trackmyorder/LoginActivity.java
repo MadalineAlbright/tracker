@@ -25,7 +25,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-//import android.support.v7.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
     EditText userIdEditText, userPassEditText;

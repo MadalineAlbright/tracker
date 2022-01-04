@@ -120,7 +120,7 @@ public class ShowUserOrdersActivity extends AppCompatActivity {
             parcelTo.setText(parcel.getTo());
             parcelFrom.setText(parcel.getFrom());
             parcelDescription.setText(parcel.getDescription());
-            parcelDestination.setText(parcel.getDestination());
+            parcelDestination.setText(parcel.getDestinationName());
 
             trackMapBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
