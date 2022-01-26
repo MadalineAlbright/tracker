@@ -29,6 +29,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -36,6 +37,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,14 +47,16 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class CustomerMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private String userId, deliveryBoyUsername, mapType;
     private String userLocation, delBoyLocation;
-    private Marker lastMarker;
+    private Marker destinationMarker,riderMarker;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
@@ -148,19 +152,38 @@ public class CustomerMapsActivity extends AppCompatActivity implements OnMapRead
         mMap.clear();
         if(riderCurrentLocation != null) {
             LatLng locationUpdate = new LatLng(currentLocation.latitude, currentLocation.longitude);
-            lastMarker = mMap.addMarker(new MarkerOptions().icon(BitmapFromVector(getApplicationContext(), R.drawable.ic_iconmonstr_home_6)).position(locationUpdate).title("Customer is here"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(locationUpdate));
-            // Zoom out to zoom level 10, animating with a duration of 1 second.
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(12), 1000, null);
+            destinationMarker = mMap.addMarker(new MarkerOptions().icon(BitmapFromVector(getApplicationContext(), R.drawable.ic_iconmonstr_home_6)).position(locationUpdate).title("Customer is here"));
+
 
 
             LatLng rider = riderCurrentLocation;
             //Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_directions_bike_black_24dp);
-            mMap.addMarker(new MarkerOptions().icon(BitmapFromVector(getApplicationContext(), R.drawable.ic_delivery)).position(rider).title("Your Order is here"));
+            riderMarker = mMap.addMarker(new MarkerOptions().icon(BitmapFromVector(getApplicationContext(), R.drawable.ic_delivery)).position(rider).title("Your Order is here"));
 
             mMap.moveCamera(CameraUpdateFactory.newLatLng(rider));
             // Zoom out to zoom level 10, animating with a duration of 1 second.
             mMap.animateCamera(CameraUpdateFactory.zoomTo(12), 1000, null);
+
+            List<Marker> markersList = new ArrayList<Marker>();
+            markersList.add(riderMarker);
+            markersList.add(destinationMarker);
+            LatLngBounds.Builder builder;
+            builder = new LatLngBounds.Builder();
+            for (Marker m : markersList) {
+                builder.include(m.getPosition());
+            }
+
+            //Bounds padding here
+            int padding = 50;
+
+            //Create bounds here
+            LatLngBounds bounds = builder.build();
+
+            //Create camera with bounds
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+            //Check map is loaded
+            mMap.animateCamera(cameraUpdate);
         }
         else{
             Toast.makeText(this, "Location Service is currently unavailable. Try again later.", Toast.LENGTH_SHORT).show();
@@ -203,7 +226,7 @@ public class CustomerMapsActivity extends AppCompatActivity implements OnMapRead
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng location = new LatLng(4.9789,120.09);
-        lastMarker = mMap.addMarker(new MarkerOptions().position(location).title("User is here"));
+        destinationMarker = mMap.addMarker(new MarkerOptions().position(location).title("User is here"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         // Zoom out to zoom level 10, animating with a duration of 1 second.
         mMap.animateCamera(CameraUpdateFactory.zoomTo(14), 1000, null);
