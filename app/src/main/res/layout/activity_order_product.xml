@@ -97,7 +97,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/parcelDesET" />
 
-    <!--<fragment
+    <fragment
         android:id="@+id/destinationFrag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -106,6 +106,7 @@
         android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/destinationTV" />-->
+        app:layout_constraintTop_toBottomOf="@+id/destinationTV"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

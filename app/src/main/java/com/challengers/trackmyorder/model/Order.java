@@ -7,7 +7,9 @@ public class Order{
     private Parcel parcel;
 
     public Order() {
+
     }
+
     public Order(String orderTime, Parcel parcel, String userId) {
         this.status = "Pending";
         this.orderTime = orderTime;

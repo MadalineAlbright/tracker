@@ -1,16 +1,20 @@
 package com.challengers.trackmyorder.model;
 
-import com.google.type.LatLng;
+
+import java.util.HashMap;
 
 public class Parcel {
-    private String time, parcelId, from, to, name, description, destinationName;
-    private com.google.android.gms.maps.model.LatLng destination;
-    public Parcel(String from, String to, String name, String description, com.google.android.gms.maps.model.LatLng destinationLatLng,String destinationName){
+    private String parcelId, from, to, name, description, destinationName, status;
+    private HashMap<String,String> destinationLatLng;
+    public Parcel(){
+
+    }
+    public Parcel(String from, String to, String name, String description,HashMap<String,String> destinationLatLng,String destinationName){
         this.from = from;
         this.to = to;
         this.name = name;
         this.description = description;
-        this.destination = destinationLatLng;
+        this.destinationLatLng = destinationLatLng;
         this.destinationName = destinationName;
     }
     public String getParcelId() {
@@ -29,8 +33,20 @@ public class Parcel {
         this.destinationName = destinationName;
     }
 
-    public void setDestination(com.google.android.gms.maps.model.LatLng destination) {
-        this.destination = destination;
+    public HashMap<String, String> getDestinationLatLng() {
+        return destinationLatLng;
+    }
+
+    public void setDestinationLatLng(HashMap<String, String> destinationLatLng) {
+        this.destinationLatLng = destinationLatLng;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getFrom() {

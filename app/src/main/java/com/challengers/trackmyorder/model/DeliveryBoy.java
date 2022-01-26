@@ -10,7 +10,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class DeliveryBoy extends User{
     private String currentStatus, currentOrderId;
-    private HashMap<String, LatLng> currentLocation;
+    private HashMap<String, Double> currentLocation;
 
     public DeliveryBoy() {
     }
@@ -35,11 +35,11 @@ public class DeliveryBoy extends User{
         this.currentOrderId = currentOrderId;
     }
 
-    public HashMap<String, LatLng> getCurrentLocation() {
+    public HashMap<String, Double> getCurrentLocation() {
         return currentLocation;
     }
 
-    public void setCurrentLocation(HashMap<String, LatLng> currentLocation) {
+    public void setCurrentLocation(HashMap<String, Double> currentLocation) {
         this.currentLocation = currentLocation;
     }
 }

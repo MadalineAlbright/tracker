@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +44,7 @@ public class DeliveriesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deliveries);
         deliveriesParcelsLV = findViewById(R.id.deliveriesParcelsLV);
+        setTitle(getIntent().getStringExtra("title"));
 
         fAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -53,7 +56,7 @@ public class DeliveriesActivity extends AppCompatActivity {
         progBar = new ProgressDialog(this);
         progBar.setTitle("Fetching my parcels.");
         progBar.setMessage("Please wait");
-        progBar.setCancelable(false);
+        progBar.setCancelable(true);
         progBar.show();
 
         CollectionReference colRef = firestore.collection("orders");
@@ -62,9 +65,12 @@ public class DeliveriesActivity extends AppCompatActivity {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for(QueryDocumentSnapshot obj:queryDocumentSnapshots){
                     Order order = obj.toObject(Order.class);
-                    if(order.getDeliveryBoyId() == username){
-                        orders.add(order);
+                    if(order.getDeliveryBoyId()!=null){
+                        if(order.getDeliveryBoyId().equals(username)){
+                            orders.add(order);
+                        }
                     }
+
                 }
                 progBar.dismiss();
                 deliveriesParcelsLV.setAdapter(new DeliveriesParcelsArrayAdapter(DeliveriesActivity.this,orders,username));
@@ -93,44 +99,46 @@ public class DeliveriesActivity extends AppCompatActivity {
             if(convertView == null){
                 convertView = LayoutInflater.from(context).inflate(R.layout.deliveries_list_item,parent,false);
             }
-            TextView deliveriesOrderIdTV = convertView.findViewById(R.id.deliveriesOrderIdTV);
             TextView deliveriesNameTV = convertView.findViewById(R.id.deliveriesNameTV);
             TextView deliveriesDestinationTV = convertView.findViewById(R.id.deliveriesDestinationTV);
             TextView deliveriesFromTV = convertView.findViewById(R.id.deliveriesFromTV);
             TextView deliveriesToTV = convertView.findViewById(R.id.deliveriesToTV);
-            TextView deliveriesStatusTV = convertView.findViewById(R.id.deliveriesStatusTV);
+            TextView deliveriesStatusTV = convertView.findViewById(R.id.deliveriesStatus);
 
-            Button makeDeliveryBtn = convertView.findViewById(R.id.moreDetailsBtn);
+            Button makeDeliveryBtn = convertView.findViewById(R.id.deliveriesTrackBtn);
 
-            deliveriesOrderIdTV.setText(order.getOrderId());
             deliveriesNameTV.setText(parcel.getName());
             deliveriesDestinationTV.setText(parcel.getDestinationName());
             deliveriesFromTV.setText(parcel.getFrom());
             deliveriesToTV.setText(parcel.getTo());
             deliveriesStatusTV.setText(order.getStatus());
-            switch (order.getStatus()){
+            switch (parcel.getStatus()){
                 case "Pending":
                     deliveriesStatusTV.setBackgroundColor(Color.YELLOW);
+                    break;
                 case "Success":
                     deliveriesStatusTV.setBackgroundColor(Color.GREEN);
+                    break;
                 case "Failed":
-                    deliveriesStatusTV.setBackgroundColor(Color.RED);
                 case "Cancelled":
+                    deliveriesStatusTV.setTextColor(Color.BLACK);
                     deliveriesStatusTV.setBackgroundColor(Color.RED);
+                    break;
                 default:
                     deliveriesStatusTV.setTextColor(Color.BLACK);
                     deliveriesStatusTV.setBackgroundColor(Color.WHITE);
+                    break;
             }
 
 
             makeDeliveryBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "Doing sth", Toast.LENGTH_SHORT).show();
-                    order.setDeliveryBoyId(userId);
-                    deliveriesParcels.document(order.getOrderId()).set(order);
-                    finish();
-                    startActivity(getIntent());
+                    Intent deliveryBoyMapsIntent = new Intent(DeliveriesActivity.this,DeliveryBoyMapsActivity.class);
+                    deliveryBoyMapsIntent.putExtra("Latitude",order.getParcel().getDestinationLatLng().get("Latitude"));
+                    deliveryBoyMapsIntent.putExtra("Longitude",order.getParcel().getDestinationLatLng().get("Longitude"));
+                    deliveryBoyMapsIntent.putExtra(Constants.DELIVERY_BOY,userId);
+                    startActivity(deliveryBoyMapsIntent);
                 }
             });
 

@@ -1,12 +1,11 @@
 package com.challengers.trackmyorder;
 
-import static android.content.ContentValues.TAG;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +17,9 @@ import com.challengers.trackmyorder.model.Parcel;
 import com.challengers.trackmyorder.util.Constants;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,17 +28,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class OrderProductActivity extends AppCompatActivity {
 
     protected EditText parcelName,parcelTo,parcelFrom,parcelDescription;
     protected TextView parcelDestination;
-    protected Button orderBtn, checkOrdersBtn, getDetinationBtn;
+    protected Button orderBtn, checkOrdersBtn;
     protected FirebaseAuth fAuth;
     protected FirebaseFirestore firestore;
     protected CollectionReference userOrders;
     protected AutocompleteSupportFragment destinationFrag;
-    protected LatLng destinationLatLng;
+    protected HashMap<String,String> destinationLatLng;
     protected String destinationName;
 
     @Override
@@ -57,25 +59,36 @@ public class OrderProductActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
         userOrders = firestore.collection("orders");
 
-        /*destinationFrag = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.destinationFrag);
+        String placesAPIKey = "AIzaSyDzRrvzZYuy1QtT4Hz133xUnZo4n9oirQo";
+        Places.initialize(getApplicationContext(),placesAPIKey);
+        PlacesClient placesClient = Places.createClient(this);
+        destinationLatLng = new HashMap<>();
+
+        destinationFrag = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.destinationFrag);
 
         // Specify the types of place data to return.
         destinationFrag.setPlaceFields(Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME));
 
+        //Restrict to a specific region
+        destinationFrag.setCountries("KE");
         // Set up a PlaceSelectionListener to handle the response.
         destinationFrag.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onPlaceSelected(@NonNull Place place) {
-                parcelDestination.setText(place.getName());
-                destinationLatLng = place.getLatLng();
+                parcelDestination.setText("Destination: " + place.getName());
+                String latitude = String.valueOf(place.getLatLng().latitude);
+                String longitude = String.valueOf(place.getLatLng().longitude);
+                destinationLatLng.put("Latitude",latitude);
+                destinationLatLng.put("Longitude",longitude);
                 destinationName = place.getName();
             }
 
             @Override
             public void onError(@androidx.annotation.NonNull Status status) {
-
+                Toast.makeText(OrderProductActivity.this, "An error has occurred"+status.getStatusMessage(), Toast.LENGTH_LONG).show();
             }
-        });*/
+        });
 
         orderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,8 +128,9 @@ public class OrderProductActivity extends AppCompatActivity {
                         addOnSuccessListener(documentReference ->{
                             order.setOrderId(documentReference.getId());
                             order.getParcel().setParcelId("prl."+documentReference.getId());
+                            order.getParcel().setStatus(order.getStatus());
                             userOrders.document(documentReference.getId()).set(order);
-                            Toast.makeText(OrderProductActivity.this, "Parcel sent successfully.Await delivery.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OrderProductActivity.this, "Parcel sent successfully. Await delivery.", Toast.LENGTH_SHORT).show();
                         }).addOnFailureListener(e -> {
                     Toast.makeText(OrderProductActivity.this, "Parcel sending has failed.", Toast.LENGTH_SHORT).show();
                 });

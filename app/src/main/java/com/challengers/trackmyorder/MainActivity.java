@@ -9,9 +9,9 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.challengers.trackmyorder.util.Constants;
+import com.google.android.libraries.places.api.Places;
 
 public class MainActivity extends AppCompatActivity {
-
     Button customerBtn, driverBtn;
 
 
@@ -19,13 +19,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         customerBtn = (Button) findViewById(R.id.customerBtn);
         driverBtn = findViewById(R.id.driverBtn);
         customerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.putExtra(Constants.LOGINTYPE, "Customer");
+                intent.putExtra(Constants.LOGINTYPE, Constants.CUSTOMER);
                 startActivity(intent);
             }
         });
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.putExtra(Constants.LOGINTYPE, "Driver");
+                intent.putExtra(Constants.LOGINTYPE, Constants.DELIVERY_BOY);
                 startActivity(intent);
             }
         });

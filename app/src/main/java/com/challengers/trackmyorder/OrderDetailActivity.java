@@ -106,7 +106,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(View view) {
                                     //Go to Map Activity
-                                    Intent intent = new Intent(OrderDetailActivity.this, MapsActivity.class);
+                                    Intent intent = new Intent(OrderDetailActivity.this, CustomerMapsActivity.class);
                                     intent.putExtra(Constants.MAPS_TYPE, mapType);
                                     intent.putExtra(Constants.CURRENT_USER, userId);
                                     intent.putExtra(Constants.CURRENT_DELBOY, delBoyId);

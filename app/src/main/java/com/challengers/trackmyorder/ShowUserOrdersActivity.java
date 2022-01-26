@@ -5,8 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.provider.Settings;
@@ -16,38 +16,30 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.challengers.trackmyorder.model.Order;
 import com.challengers.trackmyorder.model.Parcel;
-import com.challengers.trackmyorder.model.Product;
 import com.challengers.trackmyorder.util.Constants;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ShowUserOrdersActivity extends AppCompatActivity {
     private FirebaseAuth fAuth;
     private FirebaseFirestore firestore;
     private ListView productOrdersLV;
-    private ArrayList<Parcel> parcels;
+    private ArrayList<Order> orders;
     private String username;
+    private ProgressDialog progBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +52,7 @@ public class ShowUserOrdersActivity extends AppCompatActivity {
         username = getIntent().getStringExtra(Constants.CURRENT_USER);
         /*BackgroundTask backgroundTask = new BackgroundTask();
         backgroundTask.execute();*/
-        parcels = new ArrayList<>();
-        ProgressDialog progBar;
+        orders = new ArrayList<>();
         progBar = new ProgressDialog(ShowUserOrdersActivity.this);
         progBar.setTitle("Fetching Parcels List.");
         progBar.setMessage("Please wait");
@@ -74,13 +65,12 @@ public class ShowUserOrdersActivity extends AppCompatActivity {
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     for(QueryDocumentSnapshot obj:queryDocumentSnapshots){
                         Order order = obj.toObject(Order.class);
-                        order.setOrderId(obj.getId());
                         if(order.getUserId().equals(username)){
-                            parcels.add(order.getParcel());
+                            orders.add(order);
                         }
                     }
                     progBar.dismiss();
-                    productOrdersLV.setAdapter(new CustomUserOrderArrayAdapter(ShowUserOrdersActivity.this,parcels,username));
+                    productOrdersLV.setAdapter(new CustomUserOrderArrayAdapter(ShowUserOrdersActivity.this,orders,username));
                 }
             });
         } else {
@@ -90,11 +80,11 @@ public class ShowUserOrdersActivity extends AppCompatActivity {
         }
     }
 
-    private class CustomUserOrderArrayAdapter extends  ArrayAdapter<Parcel> {
+    private class CustomUserOrderArrayAdapter extends  ArrayAdapter<Order> {
         Context context;
-        ArrayList<Parcel> orders;
+        ArrayList<Order> orders;
         String userId;
-        public CustomUserOrderArrayAdapter(Context context, ArrayList<Parcel> ordersList,String userId) {
+        public CustomUserOrderArrayAdapter(Context context, ArrayList<Order> ordersList,String userId) {
             super(context,0,ordersList);
             this.context = context;
             this.orders = ordersList;
@@ -103,7 +93,8 @@ public class ShowUserOrdersActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Parcel parcel = getItem(position);
+            Order order = getItem(position);
+            Parcel parcel = order.getParcel();
 
             if(convertView == null){
                 convertView = LayoutInflater.from(context).inflate(R.layout.user_order_list_item,parent,false);
@@ -113,6 +104,7 @@ public class ShowUserOrdersActivity extends AppCompatActivity {
             TextView parcelFrom = convertView.findViewById(R.id.parcelFromTV);
             TextView parcelDestination = convertView.findViewById(R.id.parcelDestinationTV);
             TextView parcelDescription = convertView.findViewById(R.id.parcelDescriptionTV);
+            TextView parcelStatus = convertView.findViewById(R.id.parcelStatus);
 
             Button trackMapBtn = convertView.findViewById(R.id.trackBtn);
 
@@ -121,6 +113,27 @@ public class ShowUserOrdersActivity extends AppCompatActivity {
             parcelFrom.setText(parcel.getFrom());
             parcelDescription.setText(parcel.getDescription());
             parcelDestination.setText(parcel.getDestinationName());
+            parcelStatus.setText(parcel.getStatus());
+
+            switch (parcel.getStatus()) {
+                case "Pending":
+                    parcelStatus.setTextColor(Color.BLACK);
+                    parcelStatus.setBackgroundColor(Color.YELLOW);
+                    break;
+                case "Success":
+                    parcelStatus.setTextColor(Color.WHITE);
+                    parcelStatus.setBackgroundColor(Color.GREEN);
+                    break;
+                case "Failed":
+                case "Cancelled":
+                    parcelStatus.setTextColor(Color.WHITE);
+                    parcelStatus.setBackgroundColor(Color.RED);
+                    break;
+                default:
+                    parcelStatus.setTextColor(Color.BLACK);
+                    parcelStatus.setBackgroundColor(Color.GREEN);
+                    break;
+            }
 
             trackMapBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -140,7 +153,7 @@ public class ShowUserOrdersActivity extends AppCompatActivity {
                     if(!gps_enabled && !network_enabled) {
                         // notify user
                         new AlertDialog.Builder(context)
-                                .setMessage("GPS is off.")
+                                .setMessage("Location service has been disabled. Please enable it to continue.")
                                 .setPositiveButton("Open location settings", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface paramDialogInterface, int paramInt) {
@@ -151,10 +164,18 @@ public class ShowUserOrdersActivity extends AppCompatActivity {
                                 .show();
                     }
                     else{
-                        Intent mapsActivity = new Intent(ShowUserOrdersActivity.this,MapsActivity.class);
-                        mapsActivity.putExtra(Constants.MAPS_TYPE,"customer");
-                        mapsActivity.putExtra(Constants.CURRENT_USER,userId);
-                        startActivity(mapsActivity);
+                        if(order.getDeliveryBoyId() == null){
+                            Toast.makeText(context, "Please wait while your parcel is assigned to a delivery boy.", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Intent mapsActivity = new Intent(ShowUserOrdersActivity.this, CustomerMapsActivity.class);
+                            mapsActivity.putExtra(Constants.MAPS_TYPE,"customer");
+                            mapsActivity.putExtra(Constants.CURRENT_USER,userId);
+                            mapsActivity.putExtra(Constants.DELIVERY_BOY, order.getDeliveryBoyId());
+                            mapsActivity.putExtra("Latitude", parcel.getDestinationLatLng().get("Latitude"));
+                            mapsActivity.putExtra("Longitude", parcel.getDestinationLatLng().get("Longitude"));
+                            startActivity(mapsActivity);
+                        }
                     }
                 }
             });

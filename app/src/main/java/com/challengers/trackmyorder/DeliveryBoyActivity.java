@@ -48,6 +48,8 @@ public class DeliveryBoyActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent availableParcelsIntent = new Intent(DeliveryBoyActivity.this,AvailableParcelsActivity.class);
                     availableParcelsIntent.putExtra(Constants.DELIVERY_BOY,userId);
+                    availableParcelsIntent.putExtra("email",currentUser.getEmail());
+                    availableParcelsIntent.putExtra("title","Available Parcels.");
                     startActivity(availableParcelsIntent);
                 }
             });
@@ -56,6 +58,7 @@ public class DeliveryBoyActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent deliveriesIntent = new Intent(DeliveryBoyActivity.this,DeliveriesActivity.class);
                     deliveriesIntent.putExtra(Constants.DELIVERY_BOY,userId);
+                    deliveriesIntent.putExtra("title","My Deliveries.");
                     startActivity(deliveriesIntent);
                 }
             });
